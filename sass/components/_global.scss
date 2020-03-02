@@ -8,3 +8,9 @@ h1 {
   font-family: $font-main;
   margin: 1em;
 }
+
+.landingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

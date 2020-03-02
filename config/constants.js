@@ -1,4 +1,4 @@
 module.exports = {
-  // domain: "http://localhost:3001",
-  domain: "http://funky.haus"
+  domain: "http://localhost:3001"
+  // domain: "http://funky.haus"
 };
