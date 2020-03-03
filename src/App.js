@@ -16,7 +16,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       email: "",
-      token: window.localStorage.ayaToken || null,
+      token: window.sessionStorage.ayaToken || null,
       user: false,
       password: "",
       login: this.login,
@@ -28,7 +28,6 @@ class App extends React.Component {
 
   login = e => {
     e.preventDefault;
-    // window.location.search = "";
     console.log(`logging in ${this.state.email}...`);
     async function postData(url = "", data = {}) {
       const response = await fetch(url, {
@@ -41,7 +40,6 @@ class App extends React.Component {
       });
       return await response.json();
     }
-
     postData(`${domain}/api/user/login`, {
       data: btoa(
         JSON.stringify({
@@ -52,7 +50,7 @@ class App extends React.Component {
     }).then(data => {
       console.log(data);
       if (data.signedJwt) {
-        localStorage.setItem("ayaToken", data.signedJwt);
+        sessionStorage.setItem("ayaToken", data.signedJwt);
         this.setState({ token: data.signedJwt });
       }
     });
@@ -60,7 +58,7 @@ class App extends React.Component {
 
   logout = () => {
     console.log("logging out ...");
-    localStorage.removeItem("ayaToken");
+    sessionStorage.removeItem("ayaToken");
     this.setState({ token: null });
   };
   toState = input => {
@@ -68,8 +66,8 @@ class App extends React.Component {
   };
 
   tokenCheck = () => {
-    if (window.localStorage.ayaToken) {
-      this.setState({ token: window.localStorage.ayaToken });
+    if (window.sessionStorage.ayaToken) {
+      this.setState({ token: window.sessionStorage.ayaToken });
     } else {
       this.setState({ token: null });
     }

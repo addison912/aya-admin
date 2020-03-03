@@ -1,5 +1,6 @@
 import React from "react";
 import UserContext from "../userContext";
+import { domain } from "../../config/constants";
 
 class Login extends React.Component {
   static contextType = UserContext;
@@ -11,6 +12,14 @@ class Login extends React.Component {
           <div className="loginContainer">
             <h2>Login</h2>
             <div className="loginForm">
+              {/* <div
+                className="g-signin2"
+                data-onsuccess="onSignIn"
+                data-theme="dark"
+              ></div> */}
+              <a href={`${domain}/api/user/login/google`}>
+                <button>Google</button>
+              </a>
               <input
                 type="email"
                 id="loginEmail"
