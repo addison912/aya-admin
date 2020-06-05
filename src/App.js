@@ -3,10 +3,12 @@ import { createHistory, LocationProvider, Router } from "@reach/router";
 import createHashSource from "hash-source";
 import userContext from "./userContext";
 import PrivateRoute from "./components/PrivateRoute";
-import { domain } from "../config/constants";
+import { domain } from "./config/constants";
+import { categories } from "./config/constants";
 
 // Components
-import Main from "./containers/Main";
+import Admin from "./containers/Admin";
+// import Main from "./containers/Main";
 
 let source = createHashSource();
 let history = createHistory(source);
@@ -38,22 +40,30 @@ class App extends React.Component {
         },
         body: JSON.stringify(data)
       });
-      return await response.json();
+      return await response;
     }
-    postData(`${domain}/api/user/login`, {
+    postData(`${domain}/auth/login`, {
       data: btoa(
         JSON.stringify({
           email: this.state.email,
           password: this.state.password
         })
       )
-    }).then(data => {
-      console.log(data);
-      if (data.signedJwt) {
-        sessionStorage.setItem("ayaToken", data.signedJwt);
-        this.setState({ token: data.signedJwt });
-      }
-    });
+    })
+      .then(res => {
+        console.log(res);
+        if (res.status != 200) {
+          alert(`Error ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        console.log(data);
+        if (data.signedJwt) {
+          sessionStorage.setItem("ayaToken", data.signedJwt);
+          this.setState({ token: data.signedJwt });
+        }
+      });
   };
 
   logout = () => {
@@ -79,7 +89,13 @@ class App extends React.Component {
         <LocationProvider history={history}>
           <userContext.Provider value={this.state}>
             <Router>
-              <PrivateRoute as={Main} path="/" />
+              <PrivateRoute as={Admin} path="/" />
+              {categories.map(category => {
+                category = category.toLowerCase().replace(/\/?\s+/g, "-");
+                return (
+                  <PrivateRoute as={Admin} key={category} path={category} />
+                );
+              })}
             </Router>
           </userContext.Provider>
         </LocationProvider>
